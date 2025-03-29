@@ -14,6 +14,20 @@
                                 <h2 class="text-center mb-4">Get started here</h2>
 
                                 <div class="ticket-form-body">
+                                    <?php
+                                        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                                            $name = $_POST['ticket-form-name'] ?? '';
+                                            $email = $_POST['ticket-form-email'] ?? '';
+                                            
+                                            if (empty($name)) {
+                                                echo "<p>Please enter your name</p>";
+                                            } elseif (empty($email)) {
+                                                echo "<p>Please enter your email</p>";
+                                            } else {
+                                                echo "<p>Thank you, $name! Your ticket request has been received.</p>";
+                                            }
+                                        }
+                                    ?>
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-12">
                                             <input type="text" name="ticket-form-name" id="ticket-form-name" class="form-control" placeholder="Full name" required>
