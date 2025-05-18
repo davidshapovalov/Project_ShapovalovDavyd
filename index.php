@@ -399,7 +399,7 @@
 
                             <nav class="d-flex justify-content-center">
                                 <div class="nav nav-tabs align-items-baseline justify-content-center" id="nav-tab" role="tablist">
-                                    <button class="nav-link active" id="nav-ContactForm-tab" data-bs-toggle="tab" data-bs-target="#nav-ContactForm" type="button" role="tab" aria-controls="nav-ContactForm" aria-selected="false">
+                                    <button class="nav-link active" id="nav-ContactForm-tab" data-bs-toggle="tab" data-bs-target="#nav-ContactForm" type="button" role="tab" aria-controls="nav-ContactForm" aria-selected="true">
                                         <h5>Contact Form</h5>
                                     </button>
 
@@ -411,18 +411,9 @@
 
                             <div class="tab-content shadow-lg mt-5" id="nav-tabContent">
                                 <div class="tab-pane fade show active" id="nav-ContactForm" role="tabpanel" aria-labelledby="nav-ContactForm-tab">
-                                    <form class="custom-form contact-form mb-5 mb-lg-0" action="#" method="post" role="form">
+                                    <form id="contactForm" class="custom-form contact-form mb-5 mb-lg-0" action="_inc/contact-form.php" method="post" role="form">
                                         <div class="contact-form-body">
-                                            <?php
-                                                if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                                                    $contact_name = $_POST['contact-name'];
-                                                    if (empty($contact_name)) {
-                                                        echo "<p>Please enter your name</p>";
-                                                    } else {
-                                                        echo "<p>Thank you, $contact_name! We received your message.</p>";
-                                                    }    
-                                                }  
-                                            ?>
+
                                             <div class="row">
                                                 <div class="col-lg-6 col-md-6 col-12">
                                                     <input type="text" name="contact-name" id="contact-name" class="form-control" placeholder="Full name" required>
@@ -442,6 +433,7 @@
                                             </div>
                                         </div>
                                     </form>
+                                    <div id="contact-result" class="mt-3"></div>
                                 </div>
 
                                 <div class="tab-pane fade" id="nav-ContactMap" role="tabpanel" aria-labelledby="nav-ContactMap-tab">
@@ -453,6 +445,30 @@
                     </div>
                 </div>
             </section>
+            <script>
+                    document.getElementById("contactForm").addEventListener("submit", function(e) {
+                        e.preventDefault(); 
+
+                        const form = e.target;
+                        const formData = new FormData(form);
+
+                        fetch(form.action, {
+                            method: "POST",
+                            body: formData
+                        })
+                        .then(response => response.text())
+                        .then(data => {
+                            document.getElementById("contact-result").innerHTML = data;
+                            form.reset(); 
+                        })
+                        .catch(error => {
+                            document.getElementById("contact-result").innerHTML = "<p style='color: red;'>Ошибка при отправке формы.</p>";
+                        });
+                    });
+            </script>
+
+
+
         </main>
 
         <?php

@@ -10,24 +10,10 @@
                     <div class="row">
 
                         <div class="col-lg-6 col-10 mx-auto">
-                            <form class="custom-form ticket-form mb-5 mb-lg-0" action="#" method="post" role="form">
+                            <form id="ticketForm" class="custom-form ticket-form mb-5 mb-lg-0" action="_inc/ticket-form.php" method="post" role="form">
                                 <h2 class="text-center mb-4">Get started here</h2>
 
                                 <div class="ticket-form-body">
-                                    <?php
-                                        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-                                            $name = $_POST['ticket-form-name'] ?? '';
-                                            $email = $_POST['ticket-form-email'] ?? '';
-                                            
-                                            if (empty($name)) {
-                                                echo "<p>Please enter your name</p>";
-                                            } elseif (empty($email)) {
-                                                echo "<p>Please enter your email</p>";
-                                            } else {
-                                                echo "<p>Thank you, $name! Your ticket request has been received.</p>";
-                                            }
-                                        }
-                                    ?>
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-12">
                                             <input type="text" name="ticket-form-name" id="ticket-form-name" class="form-control" placeholder="Full name" required>
@@ -45,22 +31,23 @@
                                     <div class="row">
                                         <div class="col-lg-6 col-md-6 col-12">
                                             <div class="form-check form-control">
-                                                <input class="form-check-input" type="radio" name="TicketForm" id="flexRadioDefault1">
+                                                <input class="form-check-input" type="radio" name="ticket-form-type" id="flexRadioDefault1" value="Early bird" required>
                                                 <label class="form-check-label" for="flexRadioDefault1">
-                                                    Eary bird $120
+                                                    Early bird $120
                                                 </label>
                                             </div>
                                         </div>
 
                                         <div class="col-lg-6 col-md-6 col-12">
                                             <div class="form-check form-check-radio form-control">
-                                                <input class="form-check-input" type="radio" name="TicketForm" id="flexRadioDefault2">
+                                                <input class="form-check-input" type="radio" name="ticket-form-type" id="flexRadioDefault2" value="Standard">
                                                 <label class="form-check-label" for="flexRadioDefault2">
                                                     Standard $240
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
+
 
                                     <input type="number" name="ticket-form-number" id="ticket-form-number" class="form-control" placeholder="Number of Tickets" required>
 
@@ -71,9 +58,34 @@
                                     </div>
                                 </div>
                             </form>
+                            <div id="ticket-result" class="mt-3"></div>
                     </div>
                 </div>
             </section>
+            <script>
+                    document.getElementById("ticketForm").addEventListener("submit", function(e) {
+                        e.preventDefault(); 
+
+                        const form = e.target;
+                        const formData = new FormData(form);
+
+                        fetch(form.action, {
+                            method: "POST",
+                            body: formData
+                        })
+                        .then(response => response.text())
+                        .then(data => {
+                            document.getElementById("ticket-result").innerHTML = data;
+                            if (data.includes("Thank you")) {
+                                form.reset(); 
+                            }
+                        })
+                        .catch(error => {
+                            document.getElementById("ticket-result").innerHTML = "<p style='color:red;'>Ошибка при отправке формы.</p>";
+                        });
+                    });
+            </script>
+
         </main>
 
         <?php
