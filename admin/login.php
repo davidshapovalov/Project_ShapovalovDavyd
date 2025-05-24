@@ -1,5 +1,5 @@
 <?php
-// Start session to store login status
+// Start session to save login status
 // Запускаем сессию, чтобы сохранить статус входа
 session_start();
 
@@ -8,11 +8,11 @@ session_start();
 $admin_user = "admin";
 $admin_pass = "12345";
 
-// Create a variable for error message
+// Create a value for error message
 // Создаём переменную для хранения сообщения об ошибке
 $error = "";
 
-// Check if the form was submitted
+// Check if the form was sended
 // Проверяем, была ли отправлена форма
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get the username and password from the form
@@ -20,14 +20,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = $_POST['username'] ?? '';
     $pass = $_POST['password'] ?? '';
 
-    // Check if the input matches the admin credentials
-    // Проверяем, совпадают ли введённые данные с учётными данными администратора
+    // Check if the inputs data == admin data
+    // Проверка на данные вода == данным админа
     if ($user === $admin_user && $pass === $admin_pass) {
         // Correct login — save to session
         // Вход успешный — сохраняем в сессии, что админ вошёл
         $_SESSION['admin_logged_in'] = true;
 
-        // Redirect to admin page
+        // To admin page
         // Перенаправляем на страницу администратора
         header("Location: admin.php");
         exit;
@@ -59,17 +59,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!-- Форма входа -->
 <form method="post">
     <label>Username:<br>
-        <!-- Поле для ввода имени пользователя -->
         <input type="text" name="username" required>
     </label><br><br>
 
     <label>Password:<br>
-        <!-- Поле для ввода пароля -->
         <input type="password" name="password" required>
     </label><br><br>
 
     <button type="submit">Login</button>
-    <!-- Кнопка входа -->
 </form>
 
 </body>
