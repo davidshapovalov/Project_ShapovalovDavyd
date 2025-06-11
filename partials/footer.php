@@ -55,15 +55,17 @@
                         <ul class="navbar-nav align-items-lg-center ms-auto me-lg-5">
                         <ul class="site-footer-links">
                             <?php
-                                $footer_items = array(
-                                    'Home' => 'index.php#section_1',
+                                $footer_items = array(   //создаю словарь 
+                                    'Home' => 'index.php#section_1', //HOME ключ а индексы значение
                                     'About' => '#',
                                     'Artists' => 'index.php#section_3',
                                     'Schedule' => 'index.php#section_4',
                                     'Pricing' => 'index.php#section_5',
                                     'Contact' => 'index.php#section_6'
                                 );
-                                 echo get_footer_menu($footer_items);
+                                $footerMenu = new MenuGenerator($footer_items); //создаю обьект
+                                echo $footerMenu->getFooterMenu(); //вывожу   print(menu.getFooterMenu())    System.out.println((String) menu.getFooterMenu());
+                                //стрелка это ссылка на метод обьекта
                             ?>
                         </ul>
                     </div>

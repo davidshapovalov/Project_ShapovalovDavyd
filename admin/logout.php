@@ -1,5 +1,14 @@
 <?php
 session_start();
-session_destroy(); // Удаляет сессию все данные с неё удаляются
-header("Location: login.php"); // Перенаправляет назад в логин
-exit;
+
+// Класс для выхода
+class Auth {
+    public function logout() {
+        session_destroy(); //ЗАКАНЧИВАЕМ СЕССИЮ
+        header("Location: login.php"); //ПЕРЕХОДИМ НА ЛОГИН ПХП
+        exit;  //РЕТЕРНАЕМ ВОЙД
+    }
+}
+
+$auth = new Auth();
+$auth->logout();

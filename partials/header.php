@@ -1,5 +1,5 @@
 <?php
-   require('_inc/functions.php');
+   require_once __DIR__ . '/../_inc/functions.php';
 ?>
 <!doctype html>
 <html lang="en">
@@ -43,7 +43,7 @@
 
             <nav class="navbar navbar-expand-lg">
                 <div class="container">
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="index.php">
                         Festava Live
                     </a>
 
@@ -55,17 +55,20 @@
     
                     <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav align-items-lg-center ms-auto me-lg-5">
-                            <?php
-                                $menu_items = array(
-                                    'Home' => 'index.php#section_1',
-                                    'About' => 'index.php#section_2',
-                                    'Artists' => 'index.php#section_3',
-                                    'Schedule' => 'index.php#section_4',
-                                    'Pricing' => 'index.php#section_5',
-                                    'Contact' => 'index.php#section_6'
-                                );
-                                echo get_nav_menu($menu_items);
-                            ?>
+                        <?php
+                            $menu_items = array(   //создаю словарь
+                                'Home' => 'index.php#section_1',   //HOME ключ а индексы значение
+                                'About' => 'index.php#section_2',
+                                'Artists' => 'index.php#section_3',
+                                'Schedule' => 'index.php#section_4',
+                                'Pricing' => 'index.php#section_5',
+                                'Contact' => 'index.php#section_6'
+                            );
+                            $menu = new MenuGenerator($menu_items);   //создаю обьек
+                            echo $menu->getNavMenu();  //вывожу   print(menu.getNavMenu())    System.out.println((String) menu.getNavMenu());
+                            //стрелка это ссылка на метод обьекта
+                        ?>
+
                     </ul>
 
                         <a href="ticket.php" class="btn custom-btn d-lg-block d-none">Buy Ticket</a>

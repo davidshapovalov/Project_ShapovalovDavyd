@@ -1,73 +1,19 @@
 <?php
-// Проверяем, была ли отправлена форма методом POST
-// Checking if the form sent by POST
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+require_once __DIR__ . '/../classes/Contact.php'; //ЭТО как импорт в пайтон, подключает ПХП только один раз если был подключен, больше не подключится
+//дир специальная переменная содержащая путь к папке
 
-    // Данные для подключения к базе
-    // Data for connecting to database
-    $host = "localhost";
-    $dbname = "concert"; 
-    $username = "root"; 
-    $password = "";  
+if ($_SERVER["REQUEST_METHOD"] == "POST") {  //отправлена ли форма методом пост      if request.method == "POST":
+    $contact = new Contact($_POST); //cоздаем обьект и передаем ему ПОСТ
+    //ПОСТ это массив, типо СЛОВАРЯ, где есть поля имя, номер билета и т.д
 
-    // Подключаемся к датабазе
-    // Connecting to datase
-    $conn = new mysqli($host, $username, $password, $dbname);
-
-    // Если ошибка с коннектом датабазы
-    // If have error with database
-    if ($conn->connect_error) {
-        die("Connection error: " . $conn->connect_error);
+    if ($contact->save()) {  //вызов метода сейв у обьекта тикет ЕСЛИ тру по сохранил
+        echo "<p style='color: white; font-weight: bold; background-color: green; padding: 10px;'>Thank you, " . $contact->getName() . "! Your message has been sent successfully.</p>";
+        //print(f"Thank you, {ticket.get_name()}!")
+    } else {  //если фолс то ошибка
+        foreach ($contact->getErrors() as $error) {  //вызов метода обьекта тикет на ошибки
+            echo "<p style='color: red;'>$error</p>";
+        }
     }
-
-    // Получаем данные из формы и убираем лишние пробелы и спецсимволы
-    // Get date from form 
-    $name = trim($_POST['contact-name'] ?? '');
-    $email = trim($_POST['contact-email'] ?? '');
-    $company = trim($_POST['contact-company'] ?? '');
-    $message = trim($_POST['contact-message'] ?? '');
-
-    // Преобразуем спецсимволы в безопасный вид
-    // Security from inputs
-    $name = htmlspecialchars($name);
-    $email = htmlspecialchars($email);
-    $company = htmlspecialchars($company);
-    $message = htmlspecialchars($message);
-
-    // Проверяем, что обязательные поля не пустые
-    // Cheking if inputs is empty
-    if (empty($name) || empty($email) || empty($company)) {
-        echo "<p style='color: red;'>Please fill in all required fields.</p>";
-        exit;
-    }
-
-    // SQL-запрос на добавление данных в таблицу contacts
-    // SQL dotaz to adding dates to table contacts
-    $sql = "INSERT INTO contacts (name, email, company, message) VALUES (?, ?, ?, ?)";
-
-    // Готовим запрос (предотвращает SQL-инъекции)
-    $stmt = $conn->prepare($sql);
-
-    // Привязываем значения к запросу (4 строки string поэтому ssss)
-    // Conneting inputs to SQL doraz (4 string => ssss)
-    $stmt->bind_param("ssss", $name, $email, $company, $message);
-
-    // Выполняем запрос и проверяем успешность
-    // Cheking and do it
-    if ($stmt->execute()) {
-        echo "<p style='color: white; font-weight: bold; background-color: green; padding: 10px;'>Thank you, $name! Your message has been sent successfully.</p>";
-    } else {
-        echo "<p style='color: white; font-weight: bold; background-color: red; padding: 10px;'>Error sending message: " . $stmt->error . "</p>";
-    }
-
-    // Закрываем запрос и соединение
-    // Closing SQL and connecting
-    $stmt->close();
-    $conn->close();
-
-} else {
-    // Если кто-то зашёл напрямую на страницу, а не отправил форму
-    // If someone dont send form and went to the web
+} else {  //если вообще не ПОСТ, то типо как ты вообще сюда попал
     echo "<p style='color: red;'>Invalid request.</p>";
 }
-?>

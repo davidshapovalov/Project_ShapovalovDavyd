@@ -1,72 +1,65 @@
 <?php
-// Start session to save login status
-// Запускаем сессию, чтобы сохранить статус входа
-session_start();
+session_start(); //открытие СЕССИИ для хранения данных зашел админ или нет
+//ХРАНИТ данные между страницами
+// ЭТО как глобальная перменная, глобальный СЛОВАРЬ
 
-// Set admin username and password
-// Устанавливаем имя пользователя и пароль администратора
-$admin_user = "admin";
-$admin_pass = "12345";
+// Класс для авторизации 
+class Auth {
+    public $error = ""; //хранит данные СООБЩЕНИЕ ОБ ОШИБКЕ паблик дает обратится вне класса
+    // стринг если что ЭРРОР
 
-// Create a value for error message
-// Создаём переменную для хранения сообщения об ошибке
-$error = "";
+    public function login($username, $password) {
+    // public void login(String username, String password)
 
-// Check if the form was sended
-// Проверяем, была ли отправлена форма
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get the username and password from the form
-    // Получаем имя пользователя и пароль из формы
-    $user = $_POST['username'] ?? '';
-    $pass = $_POST['password'] ?? '';
-
-    // Check if the inputs data == admin data
-    // Проверка на данные вода == данным админа
-    if ($user === $admin_user && $pass === $admin_pass) {
-        // Correct login — save to session
-        // Вход успешный — сохраняем в сессии, что админ вошёл
-        $_SESSION['admin_logged_in'] = true;
-
-        // To admin page
-        // Перенаправляем на страницу администратора
-        header("Location: admin.php");
-        exit;
-    } else {
-        // Wrong login — show error
-        // Неверный логин или пароль — показать ошибку
-        $error = "Invalid username or password";
+        if ($username == "admin" && $password == "12345") {
+            $_SESSION['admin_logged_in'] = true;  //СОХРАНЯЕМ в сессию что АДМИН ЗАШЕЛ
+            header("Location: admin.php"); //ПЕРЕНАПРАЯВЛЯЕМ типа в АДМИН пхп
+            exit; //как пустой ретёрн в джаве, просто брейк войд метода
+        } else {
+            $this->error = "Incorrect password or name"; //ошибку добавляем
+        }
     }
+}
+
+// Создаем объект 
+$auth = new Auth();
+
+// Если отправлена форма
+if ($_SERVER["REQUEST_METHOD"] == "POST") {   //отправлена ли форма методом пост      if request.method == "POST":
+    $user = $_POST['username'] ?? '';     // забираем ИМЯ с ПОСТА и создаем переменную ДЛЯ ОТПРАВКИ В метод ЛОГИН
+    $pass = $_POST['password'] ?? '';
+    $auth->login($user, $pass);  // ВЫЗЫВАЕМ метод логин для обьекта АВТОРИЗАЦИИ класса
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Admin Login</title>
+    <title>Login</title>
 </head>
 <body>
 
-<h2>Admin Login</h2>
+<h2>Admin login</h2>
 
-<!-- Show error message if it exists -->
-<!-- Покажи сообщение об ошибке, если оно есть -->
-<?php if ($error): ?>
-    <p style="color:red;"><?= htmlspecialchars($error) ?></p>
-<?php endif; ?>
+<?php
+      //ЕСЛИ ОШИБКА ЕСТЬ то выведет безопасно НЕПРАВИЛЬНЫЙ пароль 
+    if ($auth->error != "") {
+        echo '<p style="color:red;">' . htmlspecialchars($auth->error) . '</p>';
+    }
+?>
 
-<!-- Login form -->
-<!-- Форма входа -->
+
 <form method="post">
-    <label>Username:<br>
+    <label>Name :<br>
         <input type="text" name="username" required>
     </label><br><br>
 
-    <label>Password:<br>
+    <label>Password :<br>
         <input type="password" name="password" required>
     </label><br><br>
 
-    <button type="submit">Login</button>
+    <button type="submit">Enter</button>
 </form>
 
 </body>

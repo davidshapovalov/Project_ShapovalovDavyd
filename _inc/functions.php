@@ -1,23 +1,33 @@
 <?php
-function get_nav_menu(array $items) { // Get elements from array in index php // Взять список элементов из главн странки
-    $menuItems = '';
-    foreach($items as $item_name => $item_link) {
-        $menuItems .= '<li class="nav-item">';
-        $menuItems .= '<a class="nav-link click-scroll" href="' . $item_link . '">' . $item_name . '</a>';
-        $menuItems .= '</li>';
+class MenuGenerator
+{
+    private $items;  //передаю СЛОВАРЬ, private HashMap<String, String> items;
+
+    public function __construct(array $items)  // public MenuGenerator(HashMap<String, String> items){}      КОНСТРУКТОР       def __init__(self, items):
+    {
+        $this->items = $items;  //this.items = items; 
     }
-    return $menuItems;
-}
 
-
-function get_footer_menu(array $items) { // Get elements from array in index php // Взять список элементов из главн странки
-    $menuItems = '';
-    foreach($items as $item_name => $item_link) {
-        $menuItems .= '<li class="site-footer-link-item">';
-        $menuItems .= '<a href="' . $item_link . '" class="site-footer-link">' . $item_name . '</a>';
-        $menuItems .= '</li>';
+    public function getNavMenu() 
+    {
+        $menu = '';   //пустая строка куда будет потом добавлятся ХТМЛ код
+        foreach ($this->items as $name => $link) { // for name, link in items.items():     БЕРЕМ и ключ и его значение в ФОРИЧ цикле
+            $menu .= '<li class="nav-item">';  //это тупо .= ЭТО += СНАЧАЛО В НАЧАЛО ЭТО ПОТОМ ДРУГОЕ ДОБАВИТЬ И Т.Д
+            $menu .= '<a class="nav-link click-scroll" href="' . $link . '">' . $name . '</a>';
+            $menu .= '</li>';
+        }
+        return $menu; //Возвращаем ХТМЛ код большой
     }
-    return $menuItems;
-}
 
+    public function getFooterMenu() //Все так же само только что Футера
+    {
+        $menu = ''; //пустая строка куда будет потом добавлятся ХТМЛ код
+        foreach ($this->items as $name => $link) { // for name, link in items.items():     БЕРЕМ и ключ и его значение в ФОРИЧ цикле
+            $menu .= '<li class="site-footer-link-item">'; //это тупо .= ЭТО += СНАЧАЛО В НАЧАЛО ЭТО ПОТОМ ДРУГОЕ ДОБАВИТЬ И Т.Д
+            $menu .= '<a href="' . $link . '" class="site-footer-link">' . $name . '</a>';
+            $menu .= '</li>';
+        }
+        return $menu; //Возвращаем ХТМЛ код большой
+    }
+}
 ?>
